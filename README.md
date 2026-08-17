@@ -4,7 +4,13 @@ A typed, script-friendly command-line client covering every operation in the Spa
 
 ## Install
 
-Requires [Bun](https://bun.sh/) 1.1 or newer when installed from source.
+Install globally with Bun:
+
+```sh
+bun add --global @hululgroup/spaceship-cli
+```
+
+To install from source, use [Bun](https://bun.sh/) 1.1 or newer:
 
 ```sh
 bun install
@@ -102,7 +108,7 @@ Precedence is CLI flag, environment, profile config, built-in default. Configura
 - Lists use required `take`/`skip` offset pagination where pagination is exposed. Envelopes generally contain `items` and `total`.
 - Errors use RFC problem-style JSON plus `spaceship-error-code` and `spaceship-operation-id` headers. HTTP 429 documents `X-RateLimit-*` and `Retry-After` headers, but the specification gives no fixed quota.
 - The only documented server is `https://spaceship.dev/api`; no staging or regional server is specified.
-- Scope is assumed to be all 50 documented operations because the plan left `Scope` blank. Binary and package names are assumed to be `spaceship` and `spaceship-cli` from the API title.
+- Scope is assumed to be all 50 documented operations because the plan left `Scope` blank. The binary is `spaceship`; the npm package is published as `@hululgroup/spaceship-cli`.
 - `TODO(verify)`: Windows Credential Manager support is not implemented because Bun provides no built-in secure credential API and the specification does not select a Windows helper. On Windows the CLI uses the warned `0600` fallback (subject to filesystem ACL semantics).
 
 ## Development

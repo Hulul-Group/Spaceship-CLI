@@ -1,7 +1,13 @@
 {
-  "name": "spaceship-cli",
+  "name": "@hululgroup/spaceship-cli",
   "version": "1.0.0",
   "description": "Production CLI for the Spaceship API",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hulul-Group/Spaceship-CLI.git"
+  },
+  "homepage": "https://github.com/Hulul-Group/Spaceship-CLI#readme",
+  "bugs": "https://github.com/Hulul-Group/Spaceship-CLI/issues",
   "type": "module",
   "bin": { "spaceship": "dist/index.js" },
   "scripts": {
@@ -21,6 +27,7 @@
   },
   "devDependencies": { "@types/bun": "latest", "typescript": "^5.9.0" },
   "engines": { "bun": ">=1.1.0" },
-  "files": ["dist", "README.md", "CHANGELOG.md"],
+  "files": ["dist/index.js", "dist/openapi.json", "README.md", "CHANGELOG.md", "LICENSE"],
+  "publishConfig": { "access": "public" },
   "license": "MIT"
 }
