@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "spaceship-cli",
+      "name": "@hululgroup/spaceship-cli",
       "dependencies": {
         "@clack/prompts": "^0.11.0",
         "cli-table3": "^0.6.5",
