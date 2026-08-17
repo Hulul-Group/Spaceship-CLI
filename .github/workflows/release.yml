@@ -50,8 +50,6 @@ jobs:
         run: bun pm pack --dry-run
       - name: Publish package to npm
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - uses: actions/download-artifact@v4
         with: { path: release, merge-multiple: true }
       - run: gh release create "$GITHUB_REF_NAME" release/* --generate-notes --verify-tag
