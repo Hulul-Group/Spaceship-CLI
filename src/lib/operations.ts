@@ -32,6 +32,7 @@ export async function executeOperation(definition: OperationDefinition, command:
     else if (parameter.in === "query" && raw !== undefined) query[parameter.name] = value(raw, parameter.schema?.type);
   }
   let body = await parseBody(flags.data as string | undefined); const mutating = definition.method !== "GET";
+  if (definition.operation.operationId === "saveRecords" && Array.isArray(body)) body = { items: body };
   if (definition.operation.requestBody?.required && body === undefined) throw new CliError("A request body is required.", ExitCode.usage, undefined, "Pass JSON with `--data` or `--data @file.json`.");
   if (body !== undefined) { const parsed = schemaToZod(requestSchema(definition.operation), spec.components.schemas).safeParse(body); if (!parsed.success) throw new CliError("The request body does not match the API schema.", ExitCode.usage, parsed.error.issues.map((i) => `${i.path.join(".") || "body"}: ${i.message}`).join("; ")); body = parsed.data; }
   const preview = { method: definition.method, path, query, body };
@@ -41,7 +42,7 @@ export async function executeOperation(definition: OperationDefinition, command:
     const answer = await confirm({ message: `Send ${definition.method} ${path}?` }); if (answer !== true) return;
   }
   config.apiSecret = await getSecret(config.profile);
-  if (!config.apiKey || !config.apiSecret) throw new CliError("API credentials are missing.", ExitCode.auth, "Both an API key and secret are required.", "Run `spaceship auth login` or set SPACESHIP_API_KEY and SPACESHIP_API_SECRET.");
+  if (!config.apiKey || !config.apiSecret) throw new CliError("API credentials are missing.", ExitCode.auth, "Both an API key and secret are required.", "Run `space auth login` or set SPACESHIP_API_KEY and SPACESHIP_API_SECRET.");
   const logger = new Logger(Boolean(globals.verbose), Boolean(globals.quiet));
   const client = new ApiClient({ ...config, apiKey: config.apiKey, apiSecret: config.apiSecret, logger });
   const schema = schemaToZod(responseSchema(definition.operation), spec.components.schemas);
