@@ -23,13 +23,23 @@ Tagged GitHub releases also contain standalone binaries that do not require Bun.
 ## 30-second quickstart
 
 ```sh
-spaceship auth login
-spaceship domain example.com get
-spaceship domain example.com records list --take 20 --skip 0
-spaceship -j domain example.com get | jq .expirationDate
+space auth login
+space domain example.com get
+space domain example.com records list --take 20 --skip 0
+space -j domain example.com get | jq .expirationDate
 ```
 
-Run `spaceship --help`, then `spaceship <group> --help`, for the complete command catalog generated from `openapi.json`.
+Run `space --help`, then `space <group> --help`, for the complete command catalog generated from `openapi.json`.
+
+The package installs `space` as the primary command and keeps `spaceship` as a compatibility name. To add another prefix in the same executable directory:
+
+```sh
+space prefix set ship
+space prefix set my-company
+space prefix remove my-company
+```
+
+Custom prefixes are validated and never overwrite an existing command. `space` and `ship` are already used by unrelated tools, so check your environment before choosing a shared name. The permanent `space` and compatibility `spaceship` entries can restore access if a custom alias is removed.
 
 ## Authentication
 
@@ -38,7 +48,7 @@ The API requires both `X-API-Key` and `X-API-Secret`. Interactive login stores t
 ```sh
 export SPACESHIP_API_KEY='...'
 export SPACESHIP_API_SECRET='...'
-spaceship -j async status OPERATION_ID
+space -j async status OPERATION_ID
 ```
 
 ## Command reference
@@ -59,17 +69,17 @@ seller
 Domain commands put the domain name first, followed by the resource and action. Query flags use kebab case. Changes support `-n` to preview; deletes require confirmation or `-y`. Previous group and operation names remain available as aliases.
 
 ```sh
-spaceship domain example.com records list
-spaceship domain example.com records set www 192.0.2.10 --type A --ttl 300
-spaceship domain example.com records set @ mail.example.com --type MX --priority 10
-spaceship domain example.com records save -d @records.json
-spaceship domain example.com nameservers set ns1.example.net ns2.example.net
-spaceship domain example.com nameservers use-basic
-spaceship seller update-domain example.com -d @update.json
-spaceship domain example.com delete -y
+space domain example.com records list
+space domain example.com records set www 192.0.2.10 --type A --ttl 300
+space domain example.com records set @ mail.example.com --type MX --priority 10
+space domain example.com records save -d @records.json
+space domain example.com nameservers set ns1.example.net ns2.example.net
+space domain example.com nameservers use-basic
+space seller update-domain example.com -d @update.json
+space domain example.com delete -y
 ```
 
-`records save` accepts either `{ "items": [...] }` or a bare JSON array for batch changes. `records set` and `records remove` build one-item batches. Supported types are A, AAAA, ALIAS, CAA, CNAME, HTTPS, MX, NS, PTR, SRV, SVCB, TLSA, and TXT. Type-specific flags are shown by `spaceship domain example.com records -h`.
+`records save` accepts either `{ "items": [...] }` or a bare JSON array for batch changes. `records set` and `records remove` build one-item batches. Supported types are A, AAAA, ALIAS, CAA, CNAME, HTTPS, MX, NS, PTR, SRV, SVCB, TLSA, and TXT. Type-specific flags are shown by `space domain example.com records -h`.
 
 Common short flags are `-j` (JSON), `-q` (quiet), `-v` (verbose), `-p` (profile), `-t` (timeout), and `-u` (API URL). Their long forms still work.
 
@@ -99,7 +109,7 @@ Precedence is CLI flag, environment, profile config, built-in default. Configura
 
 ## Troubleshooting
 
-- `API credentials are missing`: run `spaceship auth login` or export both credential variables.
+- `API credentials are missing`: run `space auth login` or export both credential variables.
 - `unexpected response`: the live API no longer matches the bundled schema; upgrade the CLI and retry with `--verbose`.
 - rate limiting: idempotent requests retry automatically and honor `Retry-After`.
 - non-interactive delete: explicitly pass `--yes`.

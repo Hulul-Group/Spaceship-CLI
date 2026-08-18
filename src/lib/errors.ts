@@ -10,7 +10,7 @@ export class CliError extends Error {
 export class ApiError extends CliError {
   constructor(message: string, public readonly status: number, public readonly code?: string, detail?: string) {
     super(message, status === 401 || status === 403 ? ExitCode.auth : status === 404 ? ExitCode.notFound : ExitCode.runtime, detail,
-      status === 401 || status === 403 ? "Run `spaceship auth login` or check the API key scopes." : "Check the request and try again.");
+      status === 401 || status === 403 ? "Run `space auth login` or check the API key scopes." : "Check the request and try again.");
   }
 }
 

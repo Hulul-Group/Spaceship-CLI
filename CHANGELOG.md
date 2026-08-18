@@ -5,6 +5,7 @@
 - Add a domain-first command layout with nested DNS record and nameserver actions.
 - Add type-aware single-record save and removal commands for all supported DNS record types.
 - Shorten command names, options, descriptions, examples, and help output while retaining legacy aliases.
+- Install `space` as the primary executable, retain `spaceship`, and support safe custom command aliases.
 
 ## 1.0.2 - 2026-08-18
 

@@ -9,7 +9,7 @@
   "homepage": "https://github.com/Hulul-Group/Spaceship-CLI#readme",
   "bugs": "https://github.com/Hulul-Group/Spaceship-CLI/issues",
   "type": "module",
-  "bin": { "spaceship": "dist/index.js" },
+  "bin": { "space": "dist/index.js", "spaceship": "dist/index.js" },
   "scripts": {
     "build": "bun build src/index.ts --target=bun --outdir=dist && cp openapi.json dist/openapi.json",
     "compile": "bun build src/index.ts --compile --outfile=dist/spaceship",
