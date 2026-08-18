@@ -32,6 +32,7 @@ export async function executeOperation(definition: OperationDefinition, command:
     else if (parameter.in === "query" && raw !== undefined) query[parameter.name] = value(raw, parameter.schema?.type);
   }
   let body = await parseBody(flags.data as string | undefined); const mutating = definition.method !== "GET";
+  if (definition.operation.operationId === "saveRecords" && Array.isArray(body)) body = { items: body };
   if (definition.operation.requestBody?.required && body === undefined) throw new CliError("A request body is required.", ExitCode.usage, undefined, "Pass JSON with `--data` or `--data @file.json`.");
   if (body !== undefined) { const parsed = schemaToZod(requestSchema(definition.operation), spec.components.schemas).safeParse(body); if (!parsed.success) throw new CliError("The request body does not match the API schema.", ExitCode.usage, parsed.error.issues.map((i) => `${i.path.join(".") || "body"}: ${i.message}`).join("; ")); body = parsed.data; }
   const preview = { method: definition.method, path, query, body };

@@ -1,6 +1,6 @@
 {
   "name": "@hululgroup/spaceship-cli",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Production CLI for the Spaceship API",
   "repository": {
     "type": "git",

@@ -24,8 +24,9 @@ Tagged GitHub releases also contain standalone binaries that do not require Bun.
 
 ```sh
 spaceship auth login
-spaceship domain-management get-domain-list --take 20 --skip 0
-spaceship --json domain-management get-domain-info example.com | jq .expirationDate
+spaceship domain example.com get
+spaceship domain example.com records list --take 20 --skip 0
+spaceship -j domain example.com get | jq .expirationDate
 ```
 
 Run `spaceship --help`, then `spaceship <group> --help`, for the complete command catalog generated from `openapi.json`.
@@ -37,38 +38,40 @@ The API requires both `X-API-Key` and `X-API-Secret`. Interactive login stores t
 ```sh
 export SPACESHIP_API_KEY='...'
 export SPACESHIP_API_SECRET='...'
-spaceship --json async-operations get-async-operation-details OPERATION_ID
+spaceship -j async status OPERATION_ID
 ```
 
 ## Command reference
 
-The top-level command groups are:
+The main resource groups are:
 
 ```text
 auth
-async-operations
-contacts
-contacts-attributes
-dns-records
-domain-management
-domain-availability
-domain-settings
-personal-nameservers
-domain-transfer
+async
+contact
+domain
+nameserver
+transfer
 hyperlift
-seller-hub
+seller
 ```
 
-API commands use the OpenAPI `operationId` in kebab case. Required URL identifiers are positional. Query values are flags with the exact API spelling. Operations with JSON bodies accept `--data '{...}'` or `--data @request.json`. All mutating operations support `--dry-run`; deletes require confirmation or `--yes`.
+Domain commands put the domain name first, followed by the resource and action. Query flags use kebab case. Changes support `-n` to preview; deletes require confirmation or `-y`. Previous group and operation names remain available as aliases.
 
 ```sh
-spaceship dns-records get-resource-records-list example.com
-spaceship domain-settings update-autorenewal example.com --data '{"autoRenew":true}' --dry-run
-spaceship seller-hub update-seller-hub-domain example.com --data @update.json
-spaceship domain-management domain-delete example.com --yes
+spaceship domain example.com records list
+spaceship domain example.com records set www 192.0.2.10 --type A --ttl 300
+spaceship domain example.com records set @ mail.example.com --type MX --priority 10
+spaceship domain example.com records save -d @records.json
+spaceship domain example.com nameservers set ns1.example.net ns2.example.net
+spaceship domain example.com nameservers use-basic
+spaceship seller update-domain example.com -d @update.json
+spaceship domain example.com delete -y
 ```
 
-Global flags include `--json`, `--quiet`, `--verbose`, `--no-color`, `--profile`, `--timeout`, and `--base-url`.
+`records save` accepts either `{ "items": [...] }` or a bare JSON array for batch changes. `records set` and `records remove` build one-item batches. Supported types are A, AAAA, ALIAS, CAA, CNAME, HTTPS, MX, NS, PTR, SRV, SVCB, TLSA, and TXT. Type-specific flags are shown by `spaceship domain example.com records -h`.
+
+Common short flags are `-j` (JSON), `-q` (quiet), `-v` (verbose), `-p` (profile), `-t` (timeout), and `-u` (API URL). Their long forms still work.
 
 ## Configuration and environment variables
 
