@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ApiError, CliError, ExitCode } from "./errors";
 import { Logger } from "./logger";
 import { problemSchema } from "../types/api";
+import { VERSION } from "./version";
 
 export type ClientOptions = { baseUrl: string; apiKey: string; apiSecret: string; timeout: number; logger?: Logger; fetch?: typeof fetch; maxRetries?: number; sleep?: (ms: number) => Promise<void> };
 export type RequestOptions<T> = { method?: string; path: string; query?: Record<string, unknown>; body?: unknown; schema: z.ZodType<T>; idempotent?: boolean };
@@ -20,7 +21,7 @@ export class ApiClient {
       try {
         this.logger.debug(`→ ${method} ${url}`);
         const response = await this.fetcher(url, { method, headers: { "X-API-Key": this.options.apiKey, "X-API-Secret": this.options.apiSecret,
-          "User-Agent": `spaceship/1.0.0 (${process.platform}; ${process.arch})`, Accept: "application/json", ...(request.body === undefined ? {} : { "Content-Type": "application/json" }) },
+          "User-Agent": `spaceship/${VERSION} (${process.platform}; ${process.arch})`, Accept: "application/json", ...(request.body === undefined ? {} : { "Content-Type": "application/json" }) },
           body: request.body === undefined ? undefined : JSON.stringify(request.body), signal: controller.signal });
         this.logger.debug(`← ${response.status} ${method} ${url} ${Math.round(performance.now() - started)}ms`);
         if ((response.status === 429 || response.status >= 500) && attempt < max) {
